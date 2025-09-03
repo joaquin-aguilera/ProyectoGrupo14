@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Portal de Medicamentos ELEAM</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #D9D9D9;
+      font-family: 'Inria Sans', Arial, sans-serif;
+    }
+
+    /* Banner */
+    header {
+      width: 100%;
+      height: 96px;
+      background: #E4E4E4;
+      border-bottom: 1px solid rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      box-sizing: border-box;
+    }
+
+    header .left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    header img {
+      height: 73px;
+    }
+
+    header h1 {
+      font-size: 32px;
+      font-weight: bold;
+      color: #1B9AA4;
+      margin: 0;
+    }
+
+    header .title {
+      font-size: 40px;
+      font-weight: bold;
+      color: #000;
+      text-align: center;
+      flex-grow: 1;
+    }
+
+    /* Datos residente */
+    .datos {
+      width: 719px;
+      height: 236px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(0, 0, 0, 0.4);
+      border-radius: 20px;
+      margin: 40px;
+      padding: 20px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .datos .foto {
+      width: 150px;
+      height: 150px;
+      border: 1px solid #000;
+      border-radius: 8px;
+      background: #f5f5f5;
+    }
+
+    .datos .info {
+      font-family: 'DM Mono', monospace;
+      font-size: 20px;
+      line-height: 32px;
+      color: #000;
+    }
+
+    /* Botones */
+    .acciones {
+      position: absolute;
+      top: 120px;
+      right: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .btn {
+      width: 260px;
+      height: 62px;
+      background: #1B9AA4;
+      border: 1px solid #FFF;
+      border-radius: 10px;
+      color: #FFF;
+      font-size: 20px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: #157e85;
+    }
+
+    /* Diagnóstico */
+    .diagnostico {
+      width: 1180px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(0,0,0,0.4);
+      border-radius: 20px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .diagnostico h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .diagnostico .cols {
+      display: flex;
+      justify-content: space-between;
+      gap: 40px;
+    }
+
+    .diagnostico .col {
+      flex: 1;
+      font-family: 'DM Mono', monospace;
+      font-size: 20px;
+      line-height: 32px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Banner -->
+  <header>
+    <div class="left">
+      <img src="{{ url_for('static', filename='image.png') }}" alt="Logo ELEAM">
+      <h1>Red ELEAM</h1>
+    </div>
+    <div class="title">Portal de Medicamentos ELEAM</div>
+    <div class="right">
+      🔔 <!-- Aquí puedes poner un ícono real de campana -->
+    </div>
+  </header>
+
+  <!-- Datos del residente -->
+  <div class="datos">
+    <div class="foto"></div>
+    <div class="info">
+      <p><b>Nombre residente:</b> {{ query if query else "..." }}</p>
+      <p><b>RUN:</b> xx.xxx.xxx-x</p>
+      <p><b>Médico tratante:</b> ..................</p>
+      <p><b>Próximo control:</b> dd/mm/aaaa</p>
+    </div>
+  </div>
+
+  <!-- Botones de acción -->
+  <div class="acciones">
+    <a href="#" class="btn">📄 Ver Ficha Clínica</a>
+    <a href="#" class="btn">ℹ️ Información Control Anterior</a>
+    <a href="#" class="btn">💊 Información Medicamentos</a>
+    <a href="/" class="btn">🚪 Salir</a>
+  </div>
+
+  <!-- Diagnóstico -->
+  <div class="diagnostico">
+    <h2>Diagnóstico Residente</h2>
+    <div class="cols">
+      <div class="col">
+        <p><b>Diagnóstico:</b> .......................................</p>
+        <p><b>Médico que indica:</b> ......................</p>
+      </div>
+      <div class="col">
+        <p><b>Nombre Medicamento (Compuesto):</b> ....</p>
+        <p><b>Dosis:</b> ..... cada ......</p>
+        <p><b>Caso SOS:</b> .......................</p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
+
