@@ -22,8 +22,7 @@ def login():
     nombre = request.form["nombre"]
     fecha = request.form["fecha"]
 
-    # Aquí podrías hacer validaciones o guardar en BD si quieres
-    # Por ahora simplemente mostramos la página buscar.html
+
     return render_template("buscar.html", resultados=[], query=nombre)
 
 # Ruta principal
