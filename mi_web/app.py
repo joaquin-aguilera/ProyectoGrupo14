@@ -14,16 +14,31 @@ def init_db():
         email TEXT UNIQUE NOT NULL
     )
     """)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS residentes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        rut TEXT NOT NULL,
+        fecha TEXT NOT NULL
+    )
+    """)
+
     conn.commit()
     conn.close()
 
 @app.route("/login", methods=["POST"])
 def login():
-    nombre = request.form["nombre"]
+    rut = request.form["rut"]
     fecha = request.form["fecha"]
 
+    # Guardar en BD
+    conn = sqlite3.connect("mi_base.db")
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO residentes (rut, fecha) VALUES (?, ?)", (rut, fecha))
+    conn.commit()
+    conn.close()
 
-    return render_template("buscar.html", resultados=[], query=nombre)
+    # Pasar a la vista buscar.html
+    return render_template("buscar.html", rut=rut, fecha=fecha)
 
 # Ruta principal
 @app.route("/", methods=["GET", "POST"])
@@ -59,16 +74,6 @@ def buscar():
     conn.close()
 
     return render_template("buscar.html", resultados=resultados, query=query)
-
-#Eliminar Usuario
-@app.route("/eliminar/<int:id>", methods=["POST"]) # Ruta para eliminar un usuario
-def eliminar(id):
-    conn = sqlite3.connect("mi_base.db") #Accede a la BD
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM usuarios WHERE id = ?", (id,)) # Realiza la consulta de SQL
-    conn.commit()
-    conn.close()
-    return redirect("/")
 
 
 if __name__ == "__main__":
