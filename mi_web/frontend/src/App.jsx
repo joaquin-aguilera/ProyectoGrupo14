@@ -1,15 +1,16 @@
-import React, { useState } from "react";
-import Login from "./Login";
-import Dashboard from "./Dashboard";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LoginForm from "./components/LoginForm";
+import Dashboard from "./components/Dashboard";
 
 function App() {
-  const [usuario, setUsuario] = useState(null);
-
-  const handleLogin = (rut, fecha) => {
-    setUsuario({ rut, fecha });
-  };
-
-  return <>{!usuario ? <Login onLogin={handleLogin} /> : <Dashboard usuario={usuario} />}</>;
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<LoginForm />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
