@@ -87,3 +87,10 @@ body {
 .login-box button:hover {
   background: #147a80;
 }
+
+.red-eleam {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1B9AA4;
+  margin-left: 20px;
+}

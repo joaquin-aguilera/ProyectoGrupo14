@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "@fontsource/inria-sans";
 
 export default function LoginForm() {
   const [rut, setRut] = useState("");
@@ -25,6 +26,7 @@ const handleSubmit = async (e) => {
     console.error("Error enviando datos:", error);
   }
 };
+
 return (
   <div> {/* contenedor principal */}
     <header className="banner">
@@ -55,7 +57,7 @@ return (
           onChange={(e) => setFecha(e.target.value)}
           required
         />
-        <button type="submit">Ingresar</button>
+        <button type="submit" >Ingresar</button>
       </form>
     </div>
   </div>
