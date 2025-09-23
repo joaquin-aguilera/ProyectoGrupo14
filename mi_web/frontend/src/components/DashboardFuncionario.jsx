@@ -1,68 +1,124 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import FormularioFuncionario from "./FormularioFuncionario";
+import FormularioMedicamento from "./FormularioMedicamento";
 import "../DashboardFuncionario.css";
-import { useNavigate } from "react-router-dom";
 
-export default function DashboardFuncionario() {
-    const navigate = useNavigate();
-    const funcionario = {
-    nombre: "Juan Pérez",
-    email: "juan.perez@eleam.chile.cl",
-    tipo: "Administrador",
-    turno: "Mañana",
-    horaIngreso: "08:00",
-    residentesVisitados: "10",
-    emergencias: "No",
-    realizadoSOS: "Sí"
+export default function DashboardFuncionario({ usuario }) {
+  const [funcionarios, setFuncionarios] = useState([]);
+  const [editing, setEditing] = useState(null);
+  const [medicamentos, setMedicamentos] = useState([]);
+  const [editingMed, setEditingMed] = useState(null);
+  const [residentes, setResidentes] = useState([]);
+
+  const fetchFuncionarios = async () => {
+    const res = await fetch("http://localhost:5000/api/funcionarios");
+    const data = await res.json();
+    setFuncionarios(data);
+  };
+
+  const fetchMedicamentos = async () => {
+    const res = await fetch("http://localhost:5000/api/medicamentos");
+    const data = await res.json();
+    setMedicamentos(data);
+  };
+
+  const fetchResidentes = async () => {
+    const res = await fetch("http://localhost:5000/api/residentes");
+    const data = await res.json();
+    setResidentes(data);
+  };
+
+  useEffect(() => {
+    fetchFuncionarios();
+    fetchMedicamentos();
+    fetchResidentes();
+  }, []);
+
+  const handleEliminarFuncionario = async rut => {
+    await fetch(`http://localhost:5000/api/funcionarios/${rut}`, { method: "DELETE" });
+    fetchFuncionarios();
+  };
+
+  const handleEliminarMedicamento = async id => {
+    await fetch(`http://localhost:5000/api/medicamentos/${id}`, { method: "DELETE" });
+    fetchMedicamentos();
   };
 
   return (
-    <div className="dashboard-container">
-      {/* Banner */}
-      <div className="banner">
-        <div className="logo-container">
-          <div className="logo"
-          style={{ backgroundImage: "url('/image.png')" }}></div>
-          <div className="red-eleam">Red ELEAM</div>
-        </div>
-        <div className="portal-title">Portal ELEAM</div>
-        <div className="bell-icon"
-        style={{ backgroundImage: "url('/campana.png')" }}></div>
-      </div>
+    <div className="dashboard-funcionario">
+      <h2>Bienvenido {usuario}</h2>
 
-      {/* Contenedor principal */}
-      <div className="dashboard-main">
-        {/* Parte izquierda */}
-        <div className="left-panel">
-          {/* Datos del funcionario */}
-          <div className="funcionario-box">
-            <h2>Bienvenido {funcionario.nombre}!</h2>
-            <div className="funcionario-info">
-              <p>Nombre: {funcionario.nombre}</p>
-              <p>Email: {funcionario.email}</p>
-              <p>Tipo: {funcionario.tipo}</p>
-              <p>Turno: {funcionario.turno}</p>
-              <p>Hora de ingreso: {funcionario.horaIngreso}</p>
-            </div>
-          </div>
+      <section>
+        <h3>Gestión de Funcionarios</h3>
+        <button onClick={() => setEditing({})}>Añadir Nuevo</button>
+        {editing && (
+          <FormularioFuncionario
+            funcionario={editing}
+            setEditing={setEditing}
+            refresh={fetchFuncionarios}
+          />
+        )}
+        <table border="1">
+          <thead>
+            <tr>
+              <th>RUT</th><th>Nombres</th><th>Apellidos</th><th>Cargo</th><th>Turno</th><th>Asistencia</th><th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {funcionarios.map(f => (
+              <tr key={f.rut}>
+                <td>{f.rut}</td><td>{f.nombres}</td><td>{f.apellidos}</td><td>{f.cargo}</td><td>{f.turno}</td><td>{f.asistencia}</td>
+                <td>
+                  <button onClick={() => setEditing(f)}>Editar</button>
+                  <button onClick={() => handleEliminarFuncionario(f.rut)}>Eliminar</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
 
-          {/* Formulario Turno Anterior */}
-          <div className="funcionario-box turno-anterior">
-            <h2>Formulario Turno Anterior</h2>
-            <div className="funcionario-info">
-              <p>Residentes Visitados: {funcionario.residentesVisitados}</p>
-              <p>Emergencias: {funcionario.emergencias}</p>
-              <p>Realizado en SOS: {funcionario.realizadoSOS}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Parte derecha */}
-        <div className="right-panel">
-          <button className="button" onClick={() => navigate("/formulario")}>Ingresar Formulario</button>
-          <button className="button">Consultar Formulario</button>
-          <button className="button">Cerrar Sesión</button>
-        </div>
-      </div>
+      <section>
+        <h3>Gestión de Medicamentos</h3>
+        <button onClick={() => setEditingMed({})}>Añadir Medicamento</button>
+        {editingMed && (
+          <FormularioMedicamento
+            medicamento={editingMed}
+            setEditing={setEditingMed}
+            refresh={fetchMedicamentos}
+            residentes={residentes}
+          />
+        )}
+        <table border="1">
+          <thead>
+            <tr>
+              <th>ID</th><th>Residente</th><th>Nombre</th><th>Dosis</th><th>CASO SOS</th><th>Médico</th><th>Inicio</th><th>Termino</th><th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {medicamentos.map(m => {
+              const residente = residentes.find(r => r.rut === m.rut_residente);
+              const nombreResidente = residente ? `${residente.nombres} ${residente.apellidos}` : m.rut_residente;
+              return (
+                <tr key={m.id}>
+                  <td>{m.id}</td>
+                  <td>{nombreResidente}</td>
+                  <td>{m.nombre}</td>
+                  <td>{m.dosis}</td>
+                  <td>{m.caso_sos ? "S" : "N"}</td>
+                  <td>{m.medico_indicador}</td>
+                  <td>{m.fecha_inicio}</td>
+                  <td>{m.fecha_termino || "-"}</td>
+                  <td>
+                    <button onClick={() => setEditingMed(m)}>Editar</button>
+                    <button onClick={() => handleEliminarMedicamento(m.id)}>Eliminar</button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </section>
     </div>
   );
 }

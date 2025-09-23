@@ -12,14 +12,14 @@ export default function LoginFuncionario() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://127.0.0.1:5000/api/funcionarios", {
+      const response = await fetch("http://127.0.0.1:5000/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ rut, clave }),
       });
 
       if (!response.ok) {
-        setMensaje("Error al enviar los datos");
+        setMensaje("Contraseña o RUT incorrecto");
         return;
       }
 

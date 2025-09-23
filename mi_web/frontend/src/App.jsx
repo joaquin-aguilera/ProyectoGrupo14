@@ -6,6 +6,9 @@ import LoginFuncionario from "./components/LoginFuncionario";
 import DashboardFuncionario from "./components/DashboardFuncionario";
 import FormularioTurno from "./components/FormularioTurno";
 import "@fontsource/inria-sans";
+import FormularioSignosVitales from "./components/FormularioSignosVitales";
+import BuscarPaciente from "./components/BuscarPaciente";
+import HistorialClinico from "./components/HistorialClinico";
 
 function App() {
   return (
@@ -23,4 +26,3 @@ function App() {
 }
 
 export default App;
-

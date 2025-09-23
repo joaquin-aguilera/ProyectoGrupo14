@@ -7,6 +7,9 @@ import LoginForm from "./components/LoginForm";
 import DashboardFuncionario from "./components/DashboardFuncionario";
 import FormularioTurno from "./components/FormularioTurno";
 import Dashboard from "./components/Dashboard";
+import FormularioSignosVitales from "./components/FormularioSignosVitales";
+import BuscarPaciente from "./components/BuscarPaciente";
+import HistorialClinico from "./components/HistorialClinico";
 import "@fontsource/inria-sans";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -19,6 +22,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard-funcionario" element={<DashboardFuncionario />} />
         <Route path="/formulario" element={<FormularioTurno />} />
+        <Route path="/buscar-paciente" element={<BuscarPaciente />} />
+        <Route path="/historial-clinico/:rut" element={<HistorialClinico />} />
+        <Route path="/formulario-signos-vitales/:rut" element={<FormularioSignosVitales />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

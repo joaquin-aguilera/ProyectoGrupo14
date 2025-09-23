@@ -1,91 +1,56 @@
+body {
+  font-family: "Inria Sans", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+}
+
 .dashboard-container {
-  width: 100%;
-  min-height: 100vh;
-  background: #D9D9D9;
-  font-family: 'Inria Sans', sans-serif;
-}
-
-
-.banner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: 96px;
-  background: #E4E4E4;
-  padding: 0 20px;
-  box-sizing: border-box;
-}
-
-.logo-container {
-  display: flex;
-  align-items: center;
-}
-
-.logo {
-  width: 150px;
-  height: 150px;
-  margin-right: 10px;
-}
-
-.red-eleam {
-  font-weight: 700;
-  font-size: 32px;
-  color: #1B9AA4;
-}
-
-.portal-title {
-  font-weight: 700;
-  font-size: 40px;
-  color: #000;
-}
-
-.bell-icon {
-  width: 48px;
-  height: 48px;
-
-}
-
-
-.dashboard-main {
-  display: flex;
-  margin: 20px;
-  gap: 20px;
-}
-
-
-.left-panel {
-  flex: 3; 
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-
-.right-panel {
-  flex: 1; 
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-
-.funcionario-box {
-  background: rgba(255,255,255,0.7);
-  border: 1px solid rgba(0,0,0,0.4);
-  border-radius: 20px;
+  max-width: 1000px;
+  margin: 50px auto;
   padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
+h2, h3 {
+  text-align: center;
+  color: #333;
+}
 
-.button {
-  width: 100%;
-  height: 60px;
-  background: #1B9AA4;
+button {
+  background-color: #007bff;
   color: #fff;
-  font-weight: 700;
-  font-size: 18px;
   border: none;
-  border-radius: 10px;
+  padding: 8px 14px;
+  margin: 5px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+table th {
+  background-color: #007bff;
+  color: #fff;
+}
+
+table tr:nth-child(even) {
+  background-color: #f2f2f2;
 }

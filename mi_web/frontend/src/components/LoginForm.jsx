@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../styles.css"
 import "@fontsource/inria-sans";
 
 export default function LoginForm() {
