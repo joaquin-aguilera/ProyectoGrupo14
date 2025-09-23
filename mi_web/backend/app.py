@@ -1,26 +1,135 @@
 from flask import Flask, request, jsonify
 from flask_mysqldb import MySQL
 from flask_cors import CORS
-import os
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True) # Permite que React haga fetch desde otro puerto
 
 # --- Configuración MySQL ---
-app.config['MYSQL_HOST'] = os.environ.get("MYSQL_HOST")
-app.config['MYSQL_USER'] = os.environ.get("MYSQL_USER")
-app.config['MYSQL_PASSWORD'] = os.environ.get("MYSQL_PASSWORD")
-app.config['MYSQL_DB'] = os.environ.get("MYSQL_BD")
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = '4ijdx84ww'
+app.config['MYSQL_DB'] = 'proyectobd'
 
 mysql = MySQL(app)
-# --- Logging de todas las peticiones --- 
-@app.before_request
-def log_request(): 
-    print(f"[LOG] {request.method} {request.path} - Datos: {request.get_json()}") 
- # --- Endpoint raíz opcional --- 
-@app.route('/')
-def home(): 
-    return jsonify({"mensaje": "ProyectoBD API funcionando"}), 200
+
+# Entrega 1
+@app.route('/prueba', methods=['GET', 'POST'])
+def prueba():
+    mensajes = []
+    resultados_funcionarios = []
+    resultados_residentes = []
+    resultados_medicamentos = []
+
+    cur = mysql.connection.cursor()
+
+    # --- Acciones Funcionario ---
+    if request.method == 'POST':
+        accion = request.form.get('accion')
+
+        # Crear funcionario
+        if accion == 'crear_funcionario':
+            try:
+                cur.execute(
+                    "INSERT INTO funcionarios (rut, nombres, apellidos, cargo, turno, asistencia) VALUES (%s,%s,%s,%s,%s,%s)",
+                    (request.form['rut'], request.form['nombres'], request.form['apellidos'],
+                     request.form['cargo'], request.form['turno'], request.form['asistencia'])
+                )
+                mysql.connection.commit()
+                mensajes.append("Funcionario creado correctamente")
+            except Exception as e:
+                mensajes.append(f"Error al crear funcionario: {e}")
+
+        # Editar funcionario
+        elif accion == 'editar_funcionario':
+            try:
+                cur.execute(
+                    "UPDATE funcionarios SET nombres=%s, apellidos=%s, cargo=%s, turno=%s, asistencia=%s WHERE rut=%s",
+                    (request.form['nombres'], request.form['apellidos'], request.form['cargo'],
+                     request.form['turno'], request.form['asistencia'], request.form['rut'])
+                )
+                mysql.connection.commit()
+                mensajes.append("Funcionario actualizado correctamente")
+            except Exception as e:
+                mensajes.append(f"Error al actualizar funcionario: {e}")
+
+        # Eliminar funcionario
+        elif accion == 'eliminar_funcionario':
+            try:
+                cur.execute("DELETE FROM funcionarios WHERE rut=%s", (request.form['rut'],))
+                mysql.connection.commit()
+                mensajes.append("Funcionario eliminado correctamente")
+            except Exception as e:
+                mensajes.append(f"Error al eliminar funcionario: {e}")
+
+        # Consultar funcionarios
+        elif accion == 'consultar_funcionarios':
+            cur.execute("SELECT rut, nombres, apellidos, cargo, turno, asistencia FROM funcionarios")
+            resultados_funcionarios = cur.fetchall()
+
+        # --- Acciones Residente ---
+        elif accion == 'crear_residente':
+            try:
+                cur.execute(
+                    "INSERT INTO residentes (rut, fecha_ingreso) VALUES (%s,%s)",
+                    (request.form['rut_residente'], request.form['fecha_ingreso'])
+                )
+                mysql.connection.commit()
+                mensajes.append("Residente creado correctamente")
+            except Exception as e:
+                mensajes.append(f"Error al crear residente: {e}")
+
+        elif accion == 'eliminar_residente':
+            try:
+                cur.execute("DELETE FROM residentes WHERE rut=%s", (request.form['rut_residente'],))
+                mysql.connection.commit()
+                mensajes.append("Residente eliminado correctamente")
+            except Exception as e:
+                mensajes.append(f"Error al eliminar residente: {e}")
+
+        elif accion == 'consultar_residentes':
+            cur.execute("SELECT rut, fecha_ingreso FROM residentes")
+            resultados_residentes = cur.fetchall()
+
+        # --- Acciones Medicamento ---
+        elif accion == 'crear_medicamento':
+            try:
+                fecha_termino = request.form['fecha_termino'] or None
+                cur.execute(
+                    """INSERT INTO medicamentos
+                    (rut_residente, nombre, dosis, caso_sos, medico_indicador, fecha_inicio, fecha_termino)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s)""",
+                    (request.form['rut_residente_med'], request.form['nombre_med'],
+                     request.form['dosis'], request.form.get('caso_sos', False),
+                     request.form['medico_indicador'], request.form['fecha_inicio'], fecha_termino)
+                )
+                mysql.connection.commit()
+                mensajes.append("Medicamento creado correctamente")
+            except Exception as e:
+                mensajes.append(f"Error al crear medicamento: {e}")
+
+        elif accion == 'eliminar_medicamento':
+            try:
+                cur.execute("DELETE FROM medicamentos WHERE id=%s", (request.form['id_med'],))
+                mysql.connection.commit()
+                mensajes.append("Medicamento eliminado correctamente")
+            except Exception as e:
+                mensajes.append(f"Error al eliminar medicamento: {e}")
+
+        elif accion == 'consultar_medicamentos':
+            cur.execute("SELECT id, rut_residente, nombre, dosis FROM medicamentos")
+            resultados_medicamentos = cur.fetchall()
+
+    cur.close()
+
+    return render_template(
+        "prueba.html",
+        mensajes=mensajes,
+        resultados_funcionarios=resultados_funcionarios,
+        resultados_residentes=resultados_residentes,
+        resultados_medicamentos=resultados_medicamentos
+    )
+
     
 # --- Portal de Medicamentos ---
 @app.route('/api/residentes', methods=['POST'])
