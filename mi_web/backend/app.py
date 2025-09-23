@@ -13,7 +13,15 @@ app.config['MYSQL_PASSWORD'] = os.environ.get("MYSQL_PASSWORD")
 app.config['MYSQL_DB'] = os.environ.get("MYSQL_BD")
 
 mysql = MySQL(app)
-
+# --- Logging de todas las peticiones --- 
+@app.before_request
+def log_request(): 
+    print(f"[LOG] {request.method} {request.path} - Datos: {request.get_json()}") 
+ # --- Endpoint raíz opcional --- 
+@app.route('/')
+def home(): 
+    return jsonify({"mensaje": "ProyectoBD API funcionando"}), 200
+    
 # --- Portal de Medicamentos ---
 @app.route('/api/residentes', methods=['POST'])
 def crear_residente():
