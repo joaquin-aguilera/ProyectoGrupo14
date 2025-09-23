@@ -15,7 +15,7 @@ app.config['MYSQL_DB'] = os.environ.get("MYSQL_BD")
 mysql = MySQL(app)
 
 # Entrega 1
-@app.route('/prueba', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def prueba():
     mensajes = []
     resultados_funcionarios = []
