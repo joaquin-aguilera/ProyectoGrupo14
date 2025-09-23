@@ -1,15 +1,16 @@
 from flask import Flask, request, jsonify
 from flask_mysqldb import MySQL
 from flask_cors import CORS
+import os
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True) # Permite que React haga fetch desde otro puerto
 
 # --- Configuración MySQL ---
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '4ijdx84ww'
-app.config['MYSQL_DB'] = 'proyectobd'
+app.config['MYSQL_HOST'] = os.environ.get("MYSQL_HOST")
+app.config['MYSQL_USER'] = os.environ.get("MYSQL_USER")
+app.config['MYSQL_PASSWORD'] = os.environ.get("MYSQL_PASSWORD")
+app.config['MYSQL_DB'] = os.environ.get("MYSQL_BD")
 
 mysql = MySQL(app)
 
